@@ -1,35 +1,50 @@
 <template>
+
   <div class="app-container">
+    <div>
+      <el-form ref="form" :model="form" label-width="120px">
+        <el-form-item label="Activity name">
+          <el-input v-model="form.title"></el-input>
+          <el-input inputSize="10px" style="width:100px"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column align="center" label='ID' width="95">
+      <el-table-column align="center" label='Num' width="60">
+        <template slot-scope="scope">
+          {{scope.$index + 1}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label='Name' width="210">
         <template slot-scope="scope">
           {{scope.$index}}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="City" width="330" align="center">
         <template slot-scope="scope">
-          {{scope.row.title}}
+          {{scope.row.author}}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="Region" width="150" align="center">
         <template slot-scope="scope">
           <span>{{scope.row.author}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
+      <el-table-column label="Mobile" width="150" align="center">
         <template slot-scope="scope">
           {{scope.row.pageviews}}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+      <el-table-column class-name="status-col" label="Vehicle Info" width="200" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column align="center" prop="created_at" label="Operation">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{scope.row.display_time}}</span>
+          <button @click="getData()">tt</button>
+          <el-tag :type="'published' | statusFilter" @click="getData()">view</el-tag>
+          <el-tag :type="'draft' | statusFilter">draft</el-tag>
+          <el-tag :type="'deleted' | statusFilter">delete</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -37,36 +52,51 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
+  import { getList } from '@/api/table'
 
-export default {
-  data() {
-    return {
-      list: null,
-      listLoading: true
-    }
-  },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+  export default {
+    data() {
+      return {
+        list: null,
+        listLoading: true,
+        form: {
+          content: '33',
+          title: 'sss',
+          deleted: 'deleted',
+          published: 'published',
+          draft: 'draft'
+        }
       }
-      return statusMap[status]
-    }
-  },
-  created() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData() {
-      this.listLoading = true
-      getList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+    },
+    filters: {
+      statusFilter(status) {
+        const statusMap = {
+          published: 'success',
+          draft: 'gray',
+          deleted: 'danger'
+        }
+        return statusMap[status]
+      }
+    },
+    created() {
+      this.fetchData()
+    },
+    methods: {
+      fetchData() {
+        this.listLoading = true
+        getList(this.listQuery).then(response => {
+          this.list = response.data.items
+          this.listLoading = false
+        })
+      },
+      getData() {
+        this
+          .$http
+          .get({ url: 'localhost:8080/customer/23' })
+          .then((data) => {
+            alert(data)
+          })
+      }
     }
   }
-}
 </script>
