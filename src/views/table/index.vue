@@ -1,5 +1,4 @@
 <template>
-
   <div class="app-container">
     <div>
       <el-form ref="form" :model="form" label-width="120px">
@@ -92,9 +91,9 @@
       getData() {
         this
           .$http
-          .get({ url: 'localhost:8080/customer/23' })
+          .get({ url: 'http://localhost:8080/customer/23' })
           .then((data) => {
-            alert(data)
+            alert(data);
           })
       }
     }
